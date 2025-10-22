@@ -654,7 +654,323 @@
                 transform: scale(1.05);
             }
         }
+        /* Tablets - 768px a 1024px */
+        @media (max-width: 1024px) {
+            .values-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
 
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .product-card:nth-child(1),
+            .product-card:nth-child(2),
+            .product-card:nth-child(3),
+            .product-card:nth-child(4),
+            .product-card:nth-child(5) {
+                grid-column: span 1;
+            }
+        }
+
+        /* Tablets pequeños y móviles grandes - menos de 768px */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+                z-index: 1001;
+            }
+
+            .nav-menu {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--white);
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+                display: none;
+                gap: 0;
+            }
+
+            .nav-menu li {
+                width: 100%;
+                text-align: center;
+                padding: 0.8rem 0;
+                border-bottom: 1px solid var(--light);
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .logo img {
+                max-height: 50px;
+            }
+
+            .hero {
+                min-height: 70vh;
+                padding-top: 70px;
+                background-attachment: scroll;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            section {
+                padding: 3rem 1rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .section-subtitle {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .about-text p {
+                font-size: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .mv-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .mv-card {
+                padding: 2rem;
+            }
+
+            .mv-card i {
+                font-size: 2.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .mv-card h3 {
+                font-size: 1.5rem;
+            }
+
+            .values-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .value-card {
+                padding: 1.5rem;
+            }
+
+            .value-card i {
+                font-size: 2rem;
+            }
+
+            .value-card h4 {
+                font-size: 1.2rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .product-card:nth-child(1),
+            .product-card:nth-child(2),
+            .product-card:nth-child(3),
+            .product-card:nth-child(4),
+            .product-card:nth-child(5) {
+                grid-column: span 1;
+            }
+
+            .product-card {
+                height: auto;
+                min-height: 400px;
+            }
+
+            .product-card:hover .product-card-inner {
+                transform: none;
+            }
+
+            .product-card-back {
+                position: relative;
+                transform: none;
+                margin-top: 1rem;
+                border-radius: 0 0 15px 15px;
+            }
+
+            .product-image {
+                height: 250px;
+            }
+
+            .product-note {
+                font-size: 1rem;
+                padding: 1rem;
+                margin-top: 2rem;
+            }
+
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .contact-info {
+                gap: 1.5rem;
+            }
+
+            .contact-item {
+                flex-direction: row;
+                align-items: start;
+            }
+
+            .contact-item i {
+                font-size: 1.3rem;
+                min-width: 30px;
+            }
+
+            .contact-form {
+                padding: 1.5rem;
+            }
+
+            .form-group {
+                margin-bottom: 1.2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-section {
+                text-align: center;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+
+            .whatsapp-button {
+                width: 50px;
+                height: 50px;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .whatsapp-button i {
+                font-size: 24px;
+            }
+
+            .btn {
+                padding: 0.8rem 2rem;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Móviles pequeños - menos de 480px */
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+
+            .hero p {
+                font-size: 0.95rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .section-subtitle {
+                font-size: 0.9rem;
+            }
+
+            .mv-card h3 {
+                font-size: 1.3rem;
+            }
+
+            .mv-card p {
+                font-size: 0.95rem;
+            }
+
+            .value-card h4 {
+                font-size: 1.1rem;
+            }
+
+            .value-card p {
+                font-size: 0.9rem;
+            }
+
+            .product-info h4 {
+                font-size: 1.1rem;
+            }
+
+            .product-card {
+                min-height: 350px;
+            }
+
+            .product-image {
+                height: 200px;
+            }
+
+            .contact-item h4 {
+                font-size: 1rem;
+            }
+
+            .contact-item p {
+                font-size: 0.9rem;
+            }
+
+            .btn {
+                padding: 0.7rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .whatsapp-button {
+                width: 45px;
+                height: 45px;
+                bottom: 15px;
+                right: 15px;
+            }
+
+            .whatsapp-button i {
+                font-size: 20px;
+            }
+        }
+
+        /* Landscape móviles */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .hero {
+                min-height: 100vh;
+                padding-top: 60px;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .hero p {
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+            }
+
+            section {
+                padding: 2rem 1rem;
+            }
+        }
         @media (max-width: 768px) {
             .menu-toggle {
                 display: flex;
