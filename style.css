@@ -45,9 +45,9 @@
         }
 
         .nav-container {
-            max-width: 1200px;
+            max-width: 1350px; 
             margin: 0 auto;
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 0.5rem; 
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -59,7 +59,7 @@
         }
 
         .logo img {
-            max-height: 60px;
+            max-height: 80px; 
             width: auto;
         }
 
@@ -703,6 +703,13 @@
                 z-index: 1001;
             }
 
+            .logo img {
+                max-height: 50px;
+                width: auto;
+                max-width: 65%; 
+            }
+            
+
             .nav-menu {
                 position: absolute;
                 top: 100%;
@@ -959,6 +966,10 @@
             .hero {
                 min-height: 75vh;
                 padding-top: 65px;
+            }
+            .g-recaptcha {
+                transform: scale(0.85);
+                transform-origin: 0 0;
             }
 
             .hero h1 {
