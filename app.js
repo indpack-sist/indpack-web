@@ -3,7 +3,16 @@ const sistemaDeteccion = {
     intentosExitosos: 0,
     
     registrarIntento: function(tipo, detalles) {
-        const timestamp = new Date().toISOString();
+        const timestamp = new Date().toLocaleString('es-PE', { 
+            timeZone: 'America/Lima',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        });
         const registro = {
             fecha: timestamp,
             tipo: tipo,
@@ -50,11 +59,11 @@ const sistemaDeteccion = {
         const historial = JSON.parse(localStorage.getItem('historial_seguridad') || '[]');
         const stats = {
             total: historial.length,
-            honeypotBloqueados: historial.filter(r => r.tipo === 'HONEYPOT_ACTIVADO').length,
             recaptchaFallidos: historial.filter(r => r.tipo === 'RECAPTCHA_FALLIDO').length,
             validacionFallida: historial.filter(r => r.tipo === 'VALIDACION_FALLIDA').length,
             enviosExitosos: historial.filter(r => r.tipo === 'ENVIO_EXITOSO').length,
-            erroresEnvio: historial.filter(r => r.tipo === 'ERROR_ENVIO').length
+            erroresEnvio: historial.filter(r => r.tipo === 'ERROR_ENVIO').length,
+            llenadoSospechoso: historial.filter(r => r.tipo === 'LLENADO_SOSPECHOSO').length
         };
         
         console.log('ESTADÍSTICAS DE SEGURIDAD:');
@@ -254,29 +263,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const formMessage = document.getElementById('formMessage');
                 formMessage.className = 'form-message error';
                 formMessage.textContent = 'Por favor corrige los errores en el formulario';
-                return;
-            }
-
-            const honeypot = document.querySelector('[name="_gotcha"]');
-            if (honeypot && honeypot.value) {
-                sistemaDeteccion.registrarIntento('HONEYPOT_ACTIVADO', {
-                    valorHoneypot: honeypot.value,
-                    nombre: nombre,
-                    email: email,
-                    mensaje: mensaje.substring(0, 50) + '...'
-                });
-                
-                console.error("ALERTA DE SEGURIDAD");
-                console.error("BOT DETECTADO - Honeypot activado");
-                console.error("Valor capturado:", honeypot.value);
-                console.error("Email sospechoso:", email);
-                
-                setTimeout(() => {
-                    const formMessage = document.getElementById('formMessage');
-                    formMessage.className = 'form-message success';
-                    formMessage.textContent = 'Gracias por tu mensaje. Nos pondremos en contacto pronto.';
-                    this.reset();
-                }, 1000);
                 return;
             }
 
