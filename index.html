@@ -656,7 +656,43 @@
             }
         }
 
-        @media (max-width: 1024px) {
+        /* Desktop Grande: 1920×1080 (7.35%) */
+        @media (min-width: 1920px) {
+            .container,
+            .nav-container,
+            .hero-content {
+                max-width: 1400px;
+            }
+            
+            .hero h1 {
+                font-size: 4rem;
+            }
+            
+            .section-title {
+                font-size: 3rem;
+            }
+        }
+
+        /* Desktop Medio: 1440×900 (3.17%) */
+        @media (min-width: 1440px) and (max-width: 1919px) {
+            .hero h1 {
+                font-size: 3.8rem;
+            }
+        }
+
+        /* Laptop Medio: 1366×768 (11.98%) y 1536×864 */
+        @media (min-width: 1024px) and (max-width: 1439px) {
+            .hero h1 {
+                font-size: 3.2rem;
+            }
+            
+            .products-grid {
+                max-width: 1200px;
+            }
+        }
+
+        /* Tablet Grande: 820×1180, 810×1080, 768×1024 */
+        @media (min-width: 768px) and (max-width: 1023px) {
             .values-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -676,9 +712,18 @@
             .product-card {
                 height: 420px;
             }
+
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .section-title {
+                font-size: 2.3rem;
+            }
         }
 
-        @media (max-width: 768px) {
+        /* Móvil Grande: 720×1280 (2.74%) */
+        @media (max-width: 767px) {
             .menu-toggle {
                 display: flex;
                 z-index: 1001;
@@ -713,28 +758,28 @@
             }
 
             .hero {
-                min-height: 70vh;
+                min-height: 80vh;
                 padding-top: 70px;
                 background-attachment: scroll;
             }
 
             .hero h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
                 margin-bottom: 1rem;
             }
 
             .hero p {
-                font-size: 1rem;
+                font-size: 1.1rem;
                 margin-bottom: 1.5rem;
             }
 
             section {
-                padding: 3rem 1rem;
+                padding: 3.5rem 1.5rem;
             }
 
             .section-title {
-                font-size: 1.8rem;
-                margin-bottom: 0.5rem;
+                font-size: 2rem;
+                margin-bottom: 0.8rem;
             }
 
             .section-subtitle {
@@ -803,11 +848,14 @@
             .product-card {
                 height: auto;
                 perspective: none;
+                cursor: default;
             }
             
             .product-card-inner {
                 transform: none !important;
                 position: static;
+                display: flex;
+                flex-direction: column;
             }
             
             .product-card-front,
@@ -818,18 +866,27 @@
             }
             
             .product-card-front {
-                margin-bottom: 0;
+                display: flex;
+                flex-direction: column;
             }
             
             .product-card-back {
-                background: var(--light);
+                background: var(--white);
                 color: var(--dark);
                 padding: 1.5rem;
                 border-radius: 0;
+                border-top: 2px solid var(--light);
+                display: block;
+            }
+
+            .product-card-back p {
+                text-align: left;
+                line-height: 1.6;
+                font-size: 0.95rem;
             }
             
             .product-image {
-                height: 220px;
+                height: 200px;
             }
             
             .product-info {
@@ -838,7 +895,7 @@
             
             .product-info h4 {
                 font-size: 1.2rem;
-                margin-bottom: 0.5rem;
+                margin-bottom: 0;
             }
 
             .product-note {
@@ -888,29 +945,63 @@
             }
 
             .whatsapp-button {
-                width: 50px;
-                height: 50px;
+                width: 55px;
+                height: 55px;
                 bottom: 20px;
                 right: 20px;
             }
 
             .whatsapp-button i {
-                font-size: 24px;
+                font-size: 26px;
             }
 
             .btn {
-                padding: 0.8rem 2rem;
+                padding: 0.9rem 2rem;
                 font-size: 0.95rem;
             }
         }
 
-        @media (max-width: 480px) {
+        /* Móvil Medio-Grande: 390×844, 393×873 (iPhones recientes) */
+        @media (min-width: 390px) and (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.9rem;
+            }
+
+            .product-image {
+                height: 190px;
+            }
+        }
+
+        /* Móvil Medio: 375×667 (5% - iPhone 6/7/8) */
+        @media (min-width: 375px) and (max-width: 389px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .product-image {
+                height: 180px;
+            }
+        }
+
+        /* Móvil Pequeño: 360×800, 360×640 (22.64%) */
+        @media (max-width: 374px) {
+            .hero {
+                min-height: 75vh;
+                padding-top: 65px;
+            }
+
             .hero h1 {
                 font-size: 1.6rem;
+                margin-bottom: 0.8rem;
             }
 
             .hero p {
                 font-size: 0.95rem;
+                margin-bottom: 1.2rem;
+            }
+
+            section {
+                padding: 3rem 1rem;
             }
 
             .section-title {
@@ -921,12 +1012,20 @@
                 font-size: 0.9rem;
             }
 
+            .mv-card {
+                padding: 1.5rem;
+            }
+
             .mv-card h3 {
                 font-size: 1.3rem;
             }
 
             .mv-card p {
-                font-size: 0.95rem;
+                font-size: 0.9rem;
+            }
+
+            .value-card {
+                padding: 1.3rem;
             }
 
             .value-card h4 {
@@ -934,7 +1033,7 @@
             }
 
             .value-card p {
-                font-size: 0.9rem;
+                font-size: 0.85rem;
             }
 
             .product-info h4 {
@@ -942,38 +1041,39 @@
             }
             
             .product-image {
-                height: 180px;
+                height: 160px;
             }
             
+            .product-card-back {
+                padding: 1.2rem;
+            }
+
             .product-card-back p {
-                font-size: 0.9rem;
+                font-size: 0.85rem;
             }
 
-            .contact-item h4 {
-                font-size: 1rem;
-            }
-
-            .contact-item p {
-                font-size: 0.9rem;
+            .contact-form {
+                padding: 1.2rem;
             }
 
             .btn {
                 padding: 0.7rem 1.5rem;
-                font-size: 0.9rem;
+                font-size: 0.85rem;
             }
 
             .whatsapp-button {
-                width: 45px;
-                height: 45px;
+                width: 48px;
+                height: 48px;
                 bottom: 15px;
                 right: 15px;
             }
 
             .whatsapp-button i {
-                font-size: 20px;
+                font-size: 22px;
             }
         }
 
+        /* Landscape en móviles */
         @media (max-height: 600px) and (orientation: landscape) {
             .hero {
                 min-height: 100vh;
@@ -992,6 +1092,11 @@
 
             section {
                 padding: 2rem 1rem;
+            }
+
+            .mv-card,
+            .value-card {
+                padding: 1.5rem;
             }
         }
     </style>
