@@ -1,408 +1,421 @@
-const sistemaDeteccion = {
-    intentosBloqueados: 0,
-    intentosExitosos: 0,
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    registrarIntento: function(tipo, detalles) {
-        const timestamp = new Date().toISOString();
-        const registro = {
-            fecha: timestamp,
-            tipo: tipo,
-            detalles: detalles,
-            ip: 'No disponible en frontend',
-            navegador: navigator.userAgent
-        };
-        
-        console.log('═══════════════════════════════════════');
-        console.log('REGISTRO DE SEGURIDAD');
-        console.log('═══════════════════════════════════════');
-        console.log('Fecha/Hora:', registro.fecha);
-        console.log('Tipo:', registro.tipo);
-        console.log('Detalles:', registro.detalles);
-        console.log('Navegador:', registro.navegador);
-        console.log('═══════════════════════════════════════');
-        
-        this.guardarEnHistorial(registro);
-    },
+    <meta name="description" content="Indpack SAC - Fabricación y distribución de productos plásticos para embalaje industrial en Perú. Envases, bolsas, film stretch y más.">
+    <meta name="keywords" content="productos plásticos, embalaje industrial, envases plásticos, bolsas plásticas, film stretch, Perú, Lima">
+    <meta name="author" content="Indpack SAC">
     
-    guardarEnHistorial(registro) {
-        let historial = JSON.parse(localStorage.getItem('historial_seguridad') || '[]');
-        historial.push(registro);
-        
-        if (historial.length > 100) {
-            historial = historial.slice(-100);
-        }
-        
-        localStorage.setItem('historial_seguridad', JSON.stringify(historial));
-    },
+    <title>Indpack SAC - Productos Plásticos para Embalaje Industrial</title>
     
-    verHistorial: function() {
-        const historial = JSON.parse(localStorage.getItem('historial_seguridad') || '[]');
-        console.table(historial);
-        return historial;
-    },
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
-    limpiarHistorial: function() {
-        localStorage.removeItem('historial_seguridad');
-        console.log('Historial limpiado');
-    },
+    <link rel="stylesheet" href="style.css?v=1.2">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
     
-    obtenerEstadisticas: function() {
-        const historial = JSON.parse(localStorage.getItem('historial_seguridad') || '[]');
-        const stats = {
-            total: historial.length,
-            honeypotBloqueados: historial.filter(r => r.tipo === 'HONEYPOT_ACTIVADO').length,
-            recaptchaFallidos: historial.filter(r => r.tipo === 'RECAPTCHA_FALLIDO').length,
-            validacionFallida: historial.filter(r => r.tipo === 'VALIDACION_FALLIDA').length,
-            enviosExitosos: historial.filter(r => r.tipo === 'ENVIO_EXITOSO').length,
-            erroresEnvio: historial.filter(r => r.tipo === 'ERROR_ENVIO').length
-        };
-        
-        console.log('ESTADÍSTICAS DE SEGURIDAD:');
-        console.table(stats);
-        return stats;
-    }
-};
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
-window.seguridadIndpack = sistemaDeteccion;
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <img src="images/logohorizontal.png" alt="INDPACK SAC Logo">
+            </a>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#nosotros">Nosotros</a></li>
+                <li><a href="#mision-vision">Misión & Visión</a></li>
+                <li><a href="#valores">Valores</a></li>
+                <li><a href="#productos">Productos</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </div>
+    </nav>
 
-document.addEventListener('DOMContentLoaded', function() {
+    <section id="inicio" class="hero">
+        <div class="hero-content">
+            <h1 data-aos="fade-up">Soluciones en Embalaje Industrial</h1>
+            <p data-aos="fade-up" data-aos-delay="200">Fabricamos productos plásticos de alta calidad para satisfacer las necesidades de tu industria</p>
+            <a href="#contacto" class="btn" data-aos="fade-up" data-aos-delay="400">Solicitar Cotización</a>
+        </div>
+    </section>
 
-    AOS.init({
-        duration: 800,
-        once: true
-    });
-
-    const SERVICE_ID = "service_u7oisbl";
-    const TEMPLATE_ID = "template_ar7ykfg";
-    const PUBLIC_KEY = "8LwIYfgiDFrQh95SK";
-
-    (function() {
-        emailjs.init(PUBLIC_KEY);
-        console.log('EmailJS inicializado correctamente');
-    })();
-
-    const formulario = document.getElementById('contactForm');
-    if (formulario) {
-        formulario.addEventListener('focus', function() {
-            if (!window.formularioInicioTiempo) {
-                window.formularioInicioTiempo = Date.now();
-            }
-        }, true);
-    }
-
-    function validarNombre(nombre) {
-        if (nombre.length < 3) {
-            return 'El nombre debe tener al menos 3 caracteres';
-        }
-        if (nombre.length > 50) {
-            return 'El nombre no puede exceder 50 caracteres';
-        }
-        return '';
-    }
-
-    function validarEmail(email) {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!regex.test(email)) {
-            return 'Por favor ingresa un email válido';
-        }
-        return '';
-    }
-
-    function validarTelefono(telefono) {
-        const regex = /^9[0-9]{8}$/;
-        if (!regex.test(telefono)) {
-            return 'El teléfono debe comenzar con 9 y tener 9 dígitos';
-        }
-        return '';
-    }
-
-    function validarEmpresa(empresa) {
-        if (empresa && empresa.length > 50) {
-            return 'El nombre de empresa no puede exceder 50 caracteres';
-        }
-        return '';
-    }
-
-    function validarAsunto(asunto) {
-        if (asunto.length < 5) {
-            return 'El asunto debe tener al menos 5 caracteres';
-        }
-        if (asunto.length > 100) {
-            return 'El asunto no puede exceder 100 caracteres';
-        }
-        return '';
-    }
-
-    function validarMensaje(mensaje) {
-        if (mensaje.length < 10) {
-            return 'El mensaje debe tener al menos 10 caracteres';
-        }
-        if (mensaje.length > 500) {
-            return 'El mensaje no puede exceder 500 caracteres';
-        }
-        return '';
-    }
-
-    function mostrarError(inputId, mensaje) {
-        const input = document.getElementById(inputId);
-        const errorSpan = document.getElementById(inputId + '-error');
-        
-        if (input && errorSpan) { 
-            if (mensaje) {
-                input.classList.add('error');
-                errorSpan.textContent = mensaje;
-                errorSpan.classList.add('show');
-            } else {
-                input.classList.remove('error');
-                errorSpan.classList.remove('show');
-            }
-        }
-    }
-
-    const nombreInput = document.getElementById('nombre');
-    if (nombreInput) {
-        nombreInput.addEventListener('blur', function() {
-            mostrarError('nombre', validarNombre(this.value));
-        });
-    }
-
-    const emailInput = document.getElementById('email');
-    if (emailInput) {
-        emailInput.addEventListener('blur', function() {
-            mostrarError('email', validarEmail(this.value));
-        });
-    }
-
-    const telefonoInput = document.getElementById('telefono');
-    if (telefonoInput) {
-        telefonoInput.addEventListener('input', function() {
-            this.value = this.value.replace(/[^0-9]/g, '');
-            if (this.value.length > 0) {
-                mostrarError('telefono', validarTelefono(this.value));
-            }
-        });
-    }
-
-    const empresaInput = document.getElementById('empresa');
-    if (empresaInput) {
-        empresaInput.addEventListener('blur', function() {
-            mostrarError('empresa', validarEmpresa(this.value));
-        });
-    }
-
-    const asuntoInput = document.getElementById('asunto');
-    if (asuntoInput) {
-        asuntoInput.addEventListener('blur', function() {
-            mostrarError('asunto', validarAsunto(this.value));
-        });
-    }
-
-    const mensajeInput = document.getElementById('mensaje');
-    if (mensajeInput) {
-        mensajeInput.addEventListener('input', function() {
-            const count = this.value.length;
-            document.getElementById('mensaje-count').textContent = count + '/500 caracteres';
+    <section id="nosotros">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Sobre Nosotros</h2>
+            <p class="section-subtitle" data-aos="fade-up">Conoce nuestra trayectoria y compromiso</p>
             
-            if (count >= 10) {
-                mostrarError('mensaje', validarMensaje(this.value));
-            }
-        });
-    }
+            <div class="about-content">
+                <div class="about-text" data-aos="fade-right">
+                    <p>Empresa peruana dedicada a la fabricación y distribución de productos plásticos para el embalaje industrial. Contamos con un equipo de profesionales calificados y con amplia experiencia en el sector que nos permite brindar una asesoría integral.</p>
+                    
+                    <p>Nos especializamos en proporcionar el embalaje adecuado para su producto, asegurándonos de cumplir y exceder la plena satisfacción de nuestros clientes mediante soluciones personalizadas y productos de la más alta calidad.</p>
+                    
+                    <p>Nuestro compromiso es ofrecer productos innovadores que se adapten a las necesidades específicas de cada industria, manteniendo siempre los más altos estándares de calidad y servicio.</p>
+                </div>
+                <div class="about-image" data-aos="fade-left">
+                    <img src="images/burbupackhd.jpg" alt="Instalaciones Indpack" loading="lazy">
+                </div>
+            </div>
+        </div>
+    </section>
 
-    const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(event) {
-            event.preventDefault();
+    <section id="mision-vision" class="mission-vision">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Misión & Visión</h2>
+            <p class="section-subtitle" data-aos="fade-up">Nuestro propósito y hacia dónde vamos</p>
             
-            console.log('Formulario enviado - iniciando validación');
+            <div class="mv-container">
+                <div class="mv-card" data-aos="zoom-in">
+                    <i class="fas fa-bullseye"></i>
+                    <h3>Nuestra Misión</h3>
+                    <p>Proveer soluciones integrales en productos plásticos para embalaje industrial, ofreciendo asesoría especializada y productos de la más alta calidad que satisfagan las necesidades específicas de nuestros clientes, contribuyendo al éxito y crecimiento de sus operaciones.</p>
+                </div>
+                <div class="mv-card" data-aos="zoom-in" data-aos-delay="200">
+                    <i class="fas fa-eye"></i>
+                    <h3>Nuestra Visión</h3>
+                    <p>Ser reconocidos como la empresa líder en el Perú en la fabricación y distribución de productos plásticos para embalaje industrial, destacándonos por nuestra innovación constante, excelencia en el servicio y compromiso con la satisfacción de nuestros clientes y el desarrollo sostenible.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            const nombre = document.getElementById('nombre').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const telefono = document.getElementById('telefono').value.trim();
-            const empresa = document.getElementById('empresa').value.trim();
-            const asunto = document.getElementById('asunto').value.trim();
-            const mensaje = document.getElementById('mensaje').value.trim();
-
-            const errorNombre = validarNombre(nombre);
-            const errorEmail = validarEmail(email);
-            const errorTelefono = validarTelefono(telefono);
-            const errorEmpresa = validarEmpresa(empresa);
-            const errorAsunto = validarAsunto(asunto);
-            const errorMensaje = validarMensaje(mensaje);
-
-            mostrarError('nombre', errorNombre);
-            mostrarError('email', errorEmail);
-            mostrarError('telefono', errorTelefono);
-            mostrarError('empresa', errorEmpresa);
-            mostrarError('asunto', errorAsunto);
-            mostrarError('mensaje', errorMensaje);
-
-            if (errorNombre || errorEmail || errorTelefono || errorEmpresa || errorAsunto || errorMensaje) {
-                console.log('Errores de validación detectados');
-                
-                sistemaDeteccion.registrarIntento('VALIDACION_FALLIDA', {
-                    errores: {
-                        nombre: errorNombre,
-                        email: errorEmail,
-                        telefono: errorTelefono,
-                        empresa: errorEmpresa,
-                        asunto: errorAsunto,
-                        mensaje: errorMensaje
-                    }
-                });
-                
-                const formMessage = document.getElementById('formMessage');
-                formMessage.className = 'form-message error';
-                formMessage.textContent = 'Por favor corrige los errores en el formulario';
-                return;
-            }
-
-            const honeypot = document.querySelector('[name="_gotcha"]');
-            if (honeypot && honeypot.value) {
-                sistemaDeteccion.registrarIntento('HONEYPOT_ACTIVADO', {
-                    valorHoneypot: honeypot.value,
-                    nombre: nombre,
-                    email: email,
-                    mensaje: mensaje.substring(0, 50) + '...'
-                });
-                
-                console.error("ALERTA DE SEGURIDAD ");
-                console.error("BOT DETECTADO - Honeypot activado");
-                console.error("Valor capturado:", honeypot.value);
-                console.error("Email sospechoso:", email);
-                
-                setTimeout(() => {
-                    const formMessage = document.getElementById('formMessage');
-                    formMessage.className = 'form-message success';
-                    formMessage.textContent = 'Gracias por tu mensaje. Nos pondremos en contacto pronto.';
-                    this.reset();
-                }, 1000);
-                return;
-            }
-
-            const recaptchaResponse = grecaptcha.getResponse();
-            if (recaptchaResponse.length === 0) {
-                console.log('reCAPTCHA no verificado');
-                
-                sistemaDeteccion.registrarIntento('RECAPTCHA_FALLIDO', {
-                    nombre: nombre,
-                    email: email
-                });
-                
-                const formMessage = document.getElementById('formMessage');
-                formMessage.className = 'form-message error';
-                formMessage.textContent = 'Por favor, completa el reCAPTCHA';
-                return; 
-            }
-
-            const tiempoLlenado = Date.now() - (window.formularioInicioTiempo || Date.now());
-            if (tiempoLlenado < 3000) {
-                sistemaDeteccion.registrarIntento('LLENADO_SOSPECHOSO', {
-                    tiempoMs: tiempoLlenado,
-                    email: email,
-                    nombre: nombre
-                });
-                console.warn('⚠️ Formulario llenado muy rápido:', tiempoLlenado, 'ms');
-            }
-
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Enviando...';
+    <section id="valores">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Nuestros Valores</h2>
+            <p class="section-subtitle" data-aos="fade-up">Los pilares que guían nuestro trabajo</p>
             
-            const formMessage = document.getElementById('formMessage');
-            formMessage.className = 'form-message info';
-            formMessage.textContent = 'Enviando tu mensaje...';
+            <div class="values-grid">
+                <div class="value-card" data-aos="flip-left">
+                    <i class="fas fa-award"></i>
+                    <h4>Calidad</h4>
+                    <p>Garantizamos productos de excelencia que cumplen con los más altos estándares de la industria.</p>
+                </div>
+                <div class="value-card" data-aos="flip-left" data-aos-delay="100">
+                    <i class="fas fa-handshake"></i>
+                    <h4>Compromiso</h4>
+                    <p>Dedicación total con nuestros clientes para superar sus expectativas en cada proyecto.</p>
+                </div>
+                <div class="value-card" data-aos="flip-left" data-aos-delay="200">
+                    <i class="fas fa-lightbulb"></i>
+                    <h4>Innovación</h4>
+                    <p>Buscamos constantemente nuevas soluciones y tecnologías para mejorar nuestros productos.</p>
+                </div>
+                <div class="value-card" data-aos="flip-left" data-aos-delay="300">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4>Responsabilidad</h4>
+                    <p>Actuamos con integridad y ética en todas nuestras operaciones comerciales.</p>
+                </div>
+                <div class="value-card" data-aos="flip-left" data-aos-delay="400">
+                    <i class="fas fa-star"></i>
+                    <h4>Excelencia</h4>
+                    <p>Buscamos la mejora continua en todos los aspectos de nuestro servicio.</p>
+                </div>
+                <div class="value-card" data-aos="flip-left" data-aos-delay="500">
+                    <i class="fas fa-users"></i>
+                    <h4>Trabajo en Equipo</h4>
+                    <p>Valoramos la colaboración y el aporte de cada miembro de nuestro equipo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            const templateParams = {
-                nombre: nombre,
-                from_name: nombre,
-                email: email,
-                telefono: telefono,
-                empresa: empresa || 'No especificada',
-                asunto: asunto,
-                mensaje: mensaje
-            };
+    <section id="productos" class="products">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Nuestros Productos</h2>
+            <p class="section-subtitle" data-aos="fade-up">Soluciones plásticas para tu industria</p>
+            
+            <div class="products-grid">
+                <div class="product-card" data-aos="fade-up">
+                    <div class="product-card-inner">
+                        <div class="product-card-front">
+                            <div class="product-image">
+                                <img src="images/burbupack.png" alt="Burbupack" loading="lazy">
+                            </div>
+                            <div class="product-info">
+                                <h4>Burbupack</h4>
+                            </div>
+                        </div>
+                        <div class="product-card-back">
+                            <p>Burbupack te ofrece el protector de burbujas, fabricado en polietileno para que puedas proteger contra golpes tus objetos embalados.</p>
+                        </div>
+                    </div>
+                </div>
 
-            emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
-                .then(function(response) {
-                    console.log('¡ÉXITO!', response.status, response.text);
-                    
-                    sistemaDeteccion.registrarIntento('ENVIO_EXITOSO', {
-                        nombre: nombre,
-                        email: email,
-                        empresa: empresa,
-                        tiempoLlenado: tiempoLlenado
-                    });
-                    
-                    formMessage.className = 'form-message success';
-                    formMessage.textContent = '¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.';
-                    document.getElementById('contactForm').reset();
-                    document.getElementById('mensaje-count').textContent = '0/500 caracteres';
-                }, function(error) {
-                    console.error('ERROR AL ENVIAR:', error);
-                    
-                    sistemaDeteccion.registrarIntento('ERROR_ENVIO', {
-                        error: error.text || error.message || 'Error desconocido',
-                        email: email,
-                        nombre: nombre
-                    });
-                    
-                    formMessage.className = 'form-message error';
-                    let errorMsg = 'Error al enviar el mensaje. ';
-                    if (error.text) {
-                        errorMsg += error.text;
-                    } else if (error.message) {
-                        errorMsg += error.message;
-                    } else {
-                        errorMsg += 'Por favor verifica tu conexión e intenta nuevamente.';
-                    }
-                    formMessage.textContent = errorMsg;
-                    console.log('Detalles completos del error:', JSON.stringify(error));
-                })
-                .finally(() => {
-                    grecaptcha.reset();
-                    setTimeout(() => {
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Mensaje';
-                    }, 3000);
-                });
-        });
-    }
+                <div class="product-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="product-card-inner">
+                        <div class="product-card-front">
+                            <div class="product-image">
+                                <img src="images/zuncho.webp" alt="Zuncho Plástico" loading="lazy">
+                            </div>
+                            <div class="product-info">
+                                <h4>Zuncho Plástico</h4>
+                            </div>
+                        </div>
+                        <div class="product-card-back">
+                            <p>Zuncho de color blanco, negro o color de preferencia. Cinta plástica en diferentes grosores y espesores, usada para el amarre de objetos, fijación o embalaje de paquetes. Ideal para amarres temporales de paquetes, cajas o mercadería.</p>
+                        </div>
+                    </div>
+                </div>
 
-    const menuToggle = document.getElementById('menuToggle');
-    if (menuToggle) {
-        menuToggle.addEventListener('click', function() {
-            document.getElementById('navMenu').classList.toggle('active');
-        });
-    }
+                <div class="product-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="product-card-inner">
+                        <div class="product-card-front">
+                            <div class="product-image">
+                                <img src="images/zunchospet.png" alt="Zuncho PET" loading="lazy">
+                            </div>
+                            <div class="product-info">
+                                <h4>Zuncho PET</h4>
+                            </div>
+                        </div>
+                        <div class="product-card-back">
+                            <p>El zuncho de poliéster funciona como efectiva alternativa al acero. Sus características de elongación, manejabilidad y resistencia lo convierten en una opción apropiada para variedad de usos. Recomendable para la mayoría de aceros.</p>
+                        </div>
+                    </div>
+                </div>
 
-    const navMenuLinks = document.querySelectorAll('.nav-menu a');
-    if (navMenuLinks) {
-        navMenuLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                document.getElementById('navMenu').classList.remove('active');
-            });
-        });
-    }
+                <div class="product-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="product-card-inner">
+                        <div class="product-card-front">
+                            <div class="product-image">
+                                <img src="images/esquineros.jpg" alt="Esquineros" loading="lazy">
+                            </div>
+                            <div class="product-info">
+                                <h4>Esquineros</h4>
+                            </div>
+                        </div>
+                        <div class="product-card-back">
+                            <p>Los esquineros de plástico son dispositivos utilizados para proteger las esquinas de productos, paletas o materiales durante el transporte, almacenamiento o manipulación. También conocidos como protectores de esquinas o protectores de bordes.</p>
+                        </div>
+                    </div>
+                </div>
 
-    window.addEventListener('scroll', function() {
-        const navbar = document.querySelector('.navbar');
-        if (navbar) {
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        }
-    });
+                <div class="product-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="product-card-inner">
+                        <div class="product-card-front">
+                            <div class="product-image">
+                                <img src="images/grapas.webp" alt="Grapas" loading="lazy">
+                            </div>
+                            <div class="product-info">
+                                <h4>Grapas Lisas y Piñas</h4>
+                            </div>
+                        </div>
+                        <div class="product-card-back">
+                            <p>Grapas industriales para zuncho fabricadas con alambre sumergido en zinc fundido o electrólisis, creando un recubrimiento que mejora la resistencia ante corrosiones. Diseño moderno sin esquinas cortantes, con fácil colocación y sellado en empaques livianos y semi-pesados.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="product-note" data-aos="fade-up">
+                <i class="fas fa-info-circle"></i>
+                Todos nuestros productos son fabricados bajo pedido según las especificaciones y necesidades de cada cliente
+            </div>
+        </div>
+    </section>
 
-    console.log('═══════════════════════════════════════════════════════════');
-    console.log('SISTEMA DE SEGURIDAD INDPACK SAC - ACTIVO');
-    console.log('═══════════════════════════════════════════════════════════');
-    console.log('Comandos disponibles:');
-    console.log('• seguridadIndpack.verHistorial()        - Ver todos los registros');
-    console.log('• seguridadIndpack.obtenerEstadisticas() - Ver estadísticas');
-    console.log('• seguridadIndpack.limpiarHistorial()    - Limpiar historial');
-    console.log('═══════════════════════════════════════════════════════════');
+    <section id="contacto">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Contáctanos</h2>
+            <p class="section-subtitle" data-aos="fade-up">Estamos aquí para ayudarte</p>
+            
+            <div class="contact-container">
+                <div class="contact-info" data-aos="fade-right">
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <p>
+                    <a href="https://maps.app.goo.gl/fUtUuJBD9PuR2TVM6" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    style="color: #000000; text-decoration: underline; display: inline;">
+                        AV. EL SOL MZ. LL1 LOTE 4 B, Villa El Salvador
+                    </a>
+                </p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Teléfono</h4>
+                            <p>+51 987 652 931</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <p>ventas@indpack.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h4>Horario de Atención</h4>
+                            <p>Lunes a Viernes: 8:00 AM - 6:00 PM<br>Sábados: 8:00 AM - 1:00 PM</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form" data-aos="fade-left">
+                    <form id="contactForm" novalidate>
+                        <input type="text" name="_gotcha" class="honeypot" tabindex="-1" autocomplete="off">
+                        
+                        <div class="form-group">
+                            <label for="nombre">Nombre Completo *</label>
+                            <input 
+                                type="text" 
+                                id="nombre" 
+                                name="from_name"
+                                required 
+                                minlength="3"
+                                maxlength="50"
+                                autocomplete="name">
+                            <small>Máximo 50 caracteres</small>
+                            <span class="error-message" id="nombre-error"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email"
+                                required
+                                maxlength="100"
+                                autocomplete="email">
+                            <small>Ejemplo: abdcdefgh@gmail.com</small>
+                            <span class="error-message" id="email-error"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="telefono">Teléfono *</label>
+                            <input 
+                                type="tel" 
+                                id="telefono" 
+                                name="telefono"
+                                required
+                                maxlength="9" 
+                                pattern="9[0-9]{8}"
+                                autocomplete="tel">
+                            <small>Debe comenzar con 9 y tener 9 dígitos</small>
+                            <span class="error-message" id="telefono-error"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="empresa">Empresa</label>
+                            <input 
+                                type="text" 
+                                id="empresa" 
+                                name="empresa"
+                                maxlength="50"
+                                autocomplete="organization">
+                            <small>Máximo 50 caracteres (opcional)</small>
+                            <span class="error-message" id="empresa-error"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="asunto">Asunto *</label>
+                            <input 
+                                type="text" 
+                                id="asunto" 
+                                name="asunto"
+                                required
+                                minlength="5"
+                                maxlength="100">
+                            <small>Entre 5 y 100 caracteres</small>
+                            <span class="error-message" id="asunto-error"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="mensaje">Mensaje *</label>
+                            <textarea 
+                                id="mensaje" 
+                                name="mensaje"
+                                required
+                                minlength="10"
+                                maxlength="500"></textarea>
+                            <small id="mensaje-count">0/500 caracteres</small>
+                            <span class="error-message" id="mensaje-error"></span>
+                        </div>
+                        <div class="form-group">
+                        <div class="g-recaptcha" data-sitekey="6Lf4m_QrAAAAADgNjCV-OLS8mezYUnDSJ8gtFheB"></div>
+                        </div>
 
-});
+                        <button type="submit" class="btn" id="submitBtn" style="width: 100%;">
+                            <i class="fas fa-paper-plane"></i> Enviar Mensaje
+                        </button>
+
+                        <div class="form-message" id="formMessage"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>INDPACK SAC</h3>
+                <p>Soluciones integrales en productos plásticos para embalaje industrial.</p>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/INDPACKPERU/?locale=es_LA" title="Facebook" rel="noopener noreferrer" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.linkedin.com/company/indpack-sac/?originalSubdomain=pe" title="LinkedIn" rel="noopener noreferrer" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Enlaces Rápidos</h3>
+                <a href="#inicio">Inicio</a>
+                <a href="#nosotros">Nosotros</a>
+                <a href="#productos">Productos</a>
+                <a href="#contacto">Contacto</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contacto</h3>
+                <p>
+                    <i class="fas fa-map-marker-alt"></i> 
+                    <a href="https://maps.app.goo.gl/fUtUuJBD9PuR2TVM6" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    style="color: #d1d5db; text-decoration: underline; display: inline;">
+                        AV. EL SOL MZ. LL1 LOTE 4 B, Villa El Salvador
+                    </a>
+                </p>
+                <p><i class="fas fa-phone"></i> +51 987 652 931</p>
+                <p><i class="fas fa-envelope"></i> ventas@indpack.com</p>
+            </div>
+            <div class="footer-section">
+                <h3>Horario</h3>
+                <p>Lunes a Viernes<br>8:00 AM - 6:00 PM</p>
+                <p>Sábados<br>8:00 AM - 1:00 PM</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Indpack SAC. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/51987652931?text=Hola,%20me%20gustaría%20más%20información%20sobre%20sus%20productos" 
+       class="whatsapp-button" 
+       target="_blank"
+       rel="noopener noreferrer"
+       title="Contáctanos por WhatsApp"
+       aria-label="Contactar por WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</body>
+</html>
