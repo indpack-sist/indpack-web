@@ -1,6 +1,72 @@
+const sistemaDeteccion = {
+    intentosBloqueados: 0,
+    intentosExitosos: 0,
+    
+    registrarIntento: function(tipo, detalles) {
+        const timestamp = new Date().toISOString();
+        const registro = {
+            fecha: timestamp,
+            tipo: tipo,
+            detalles: detalles,
+            ip: 'No disponible en frontend',
+            navegador: navigator.userAgent
+        };
+        
+        console.log('═══════════════════════════════════════');
+        console.log('REGISTRO DE SEGURIDAD');
+        console.log('═══════════════════════════════════════');
+        console.log('Fecha/Hora:', registro.fecha);
+        console.log('Tipo:', registro.tipo);
+        console.log('Detalles:', registro.detalles);
+        console.log('Navegador:', registro.navegador);
+        console.log('═══════════════════════════════════════');
+        
+        this.guardarEnHistorial(registro);
+    },
+    
+    guardarEnHistorial(registro) {
+        let historial = JSON.parse(localStorage.getItem('historial_seguridad') || '[]');
+        historial.push(registro);
+        
+        if (historial.length > 100) {
+            historial = historial.slice(-100);
+        }
+        
+        localStorage.setItem('historial_seguridad', JSON.stringify(historial));
+    },
+    
+    verHistorial: function() {
+        const historial = JSON.parse(localStorage.getItem('historial_seguridad') || '[]');
+        console.table(historial);
+        return historial;
+    },
+    
+    limpiarHistorial: function() {
+        localStorage.removeItem('historial_seguridad');
+        console.log('Historial limpiado');
+    },
+    
+    obtenerEstadisticas: function() {
+        const historial = JSON.parse(localStorage.getItem('historial_seguridad') || '[]');
+        const stats = {
+            total: historial.length,
+            honeypotBloqueados: historial.filter(r => r.tipo === 'HONEYPOT_ACTIVADO').length,
+            recaptchaFallidos: historial.filter(r => r.tipo === 'RECAPTCHA_FALLIDO').length,
+            validacionFallida: historial.filter(r => r.tipo === 'VALIDACION_FALLIDA').length,
+            enviosExitosos: historial.filter(r => r.tipo === 'ENVIO_EXITOSO').length,
+            erroresEnvio: historial.filter(r => r.tipo === 'ERROR_ENVIO').length
+        };
+        
+        console.log('ESTADÍSTICAS DE SEGURIDAD:');
+        console.table(stats);
+        return stats;
+    }
+};
+
+window.seguridadIndpack = sistemaDeteccion;
+
 document.addEventListener('DOMContentLoaded', function() {
 
-    
     AOS.init({
         duration: 800,
         once: true
@@ -14,6 +80,15 @@ document.addEventListener('DOMContentLoaded', function() {
         emailjs.init(PUBLIC_KEY);
         console.log('EmailJS inicializado correctamente');
     })();
+
+    const formulario = document.getElementById('contactForm');
+    if (formulario) {
+        formulario.addEventListener('focus', function() {
+            if (!window.formularioInicioTiempo) {
+                window.formularioInicioTiempo = Date.now();
+            }
+        }, true);
+    }
 
     function validarNombre(nombre) {
         if (nombre.length < 3) {
@@ -83,7 +158,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-
 
     const nombreInput = document.getElementById('nombre');
     if (nombreInput) {
@@ -165,6 +239,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (errorNombre || errorEmail || errorTelefono || errorEmpresa || errorAsunto || errorMensaje) {
                 console.log('Errores de validación detectados');
+                
+                sistemaDeteccion.registrarIntento('VALIDACION_FALLIDA', {
+                    errores: {
+                        nombre: errorNombre,
+                        email: errorEmail,
+                        telefono: errorTelefono,
+                        empresa: errorEmpresa,
+                        asunto: errorAsunto,
+                        mensaje: errorMensaje
+                    }
+                });
+                
                 const formMessage = document.getElementById('formMessage');
                 formMessage.className = 'form-message error';
                 formMessage.textContent = 'Por favor corrige los errores en el formulario';
@@ -173,7 +259,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const honeypot = document.querySelector('[name="_gotcha"]');
             if (honeypot && honeypot.value) {
-                console.error("Honeypot activado - posible bot");
+                sistemaDeteccion.registrarIntento('HONEYPOT_ACTIVADO', {
+                    valorHoneypot: honeypot.value,
+                    nombre: nombre,
+                    email: email,
+                    mensaje: mensaje.substring(0, 50) + '...'
+                });
+                
+                console.error("ALERTA DE SEGURIDAD");
+                console.error("BOT DETECTADO - Honeypot activado");
+                console.error("Valor capturado:", honeypot.value);
+                console.error("Email sospechoso:", email);
+                
                 setTimeout(() => {
                     const formMessage = document.getElementById('formMessage');
                     formMessage.className = 'form-message success';
@@ -186,10 +283,26 @@ document.addEventListener('DOMContentLoaded', function() {
             const recaptchaResponse = grecaptcha.getResponse();
             if (recaptchaResponse.length === 0) {
                 console.log('reCAPTCHA no verificado');
+                
+                sistemaDeteccion.registrarIntento('RECAPTCHA_FALLIDO', {
+                    nombre: nombre,
+                    email: email
+                });
+                
                 const formMessage = document.getElementById('formMessage');
                 formMessage.className = 'form-message error';
                 formMessage.textContent = 'Por favor, completa el reCAPTCHA';
                 return; 
+            }
+
+            const tiempoLlenado = Date.now() - (window.formularioInicioTiempo || Date.now());
+            if (tiempoLlenado < 3000) {
+                sistemaDeteccion.registrarIntento('LLENADO_SOSPECHOSO', {
+                    tiempoMs: tiempoLlenado,
+                    email: email,
+                    nombre: nombre
+                });
+                console.warn('Formulario llenado muy rápido:', tiempoLlenado, 'ms');
             }
 
             const submitBtn = document.getElementById('submitBtn');
@@ -213,14 +326,28 @@ document.addEventListener('DOMContentLoaded', function() {
             emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
                 .then(function(response) {
                     console.log('¡ÉXITO!', response.status, response.text);
+                    
+                    sistemaDeteccion.registrarIntento('ENVIO_EXITOSO', {
+                        nombre: nombre,
+                        email: email,
+                        empresa: empresa,
+                        tiempoLlenado: tiempoLlenado
+                    });
+                    
                     formMessage.className = 'form-message success';
                     formMessage.textContent = '¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.';
                     document.getElementById('contactForm').reset();
                     document.getElementById('mensaje-count').textContent = '0/500 caracteres';
                 }, function(error) {
                     console.error('ERROR AL ENVIAR:', error);
-                    formMessage.className = 'form-message error';
                     
+                    sistemaDeteccion.registrarIntento('ERROR_ENVIO', {
+                        error: error.text || error.message || 'Error desconocido',
+                        email: email,
+                        nombre: nombre
+                    });
+                    
+                    formMessage.className = 'form-message error';
                     let errorMsg = 'Error al enviar el mensaje. ';
                     if (error.text) {
                         errorMsg += error.text;
@@ -229,7 +356,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     } else {
                         errorMsg += 'Por favor verifica tu conexión e intenta nuevamente.';
                     }
-                    
                     formMessage.textContent = errorMsg;
                     console.log('Detalles completos del error:', JSON.stringify(error));
                 })
@@ -270,5 +396,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    console.log('═══════════════════════════════════════════════════════════');
+    console.log('SISTEMA DE SEGURIDAD INDPACK SAC - ACTIVO');
+    console.log('═══════════════════════════════════════════════════════════');
+    console.log('Comandos disponibles:');
+    console.log('• seguridadIndpack.verHistorial()        - Ver todos los registros');
+    console.log('• seguridadIndpack.obtenerEstadisticas() - Ver estadísticas');
+    console.log('• seguridadIndpack.limpiarHistorial()    - Limpiar historial');
+    console.log('═══════════════════════════════════════════════════════════');
 
-}); 
+});
