@@ -311,119 +311,120 @@
         }
 
         .products {
-    background: var(--light);
-}
+            background: var(--light);
+        }
 
-.products-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr); /* Cambiado a 6 columnas para mejor control */
-    gap: 2rem;
-    max-width: 1400px;
-    margin: 0 auto;
-}
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr); 
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
 
-/* Los primeros 3 productos ocupan 2 columnas cada uno */
-.product-card:nth-child(1),
-.product-card:nth-child(2),
-.product-card:nth-child(3) {
-    grid-column: span 2;
-}
+        .product-card:nth-child(1),
+        .product-card:nth-child(2),
+        .product-card:nth-child(3) {
+            grid-column: span 2;
+        }
 
-/* Los últimos 2 productos: centrados */
-.product-card:nth-child(4) {
-    grid-column: 2 / span 2; /* Empieza en columna 2, ocupa 2 columnas */
-}
+        .product-card:nth-child(4) {
+            grid-column: 2 / span 2;
+        }
 
-.product-card:nth-child(5) {
-    grid-column: 4 / span 2; /* Empieza en columna 4, ocupa 2 columnas */
-}
+        .product-card:nth-child(5) {
+            grid-column: 4 / span 2;
+        }
 
-.product-card {
-    background: var(--white);
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-    transition: all 0.3s;
-    height: 450px;
-    position: relative;
-    perspective: 1000px;
-}
+        .product-card {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            height: 450px;
+            position: relative;
+            perspective: 1000px;
+        }
 
-.product-card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.6s;
-    transform-style: preserve-3d;
-}
+        .product-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
 
-.product-card:hover .product-card-inner {
-    transform: rotateY(180deg);
-}
+        .product-card:hover .product-card-inner {
+            transform: rotateY(180deg);
+        }
 
-.product-card-front,
-.product-card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    border-radius: 15px;
-    overflow: hidden;
-}
+        .product-card-front,
+        .product-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            overflow: hidden;
+        }
 
-.product-card-front {
-    display: flex;
-    flex-direction: column;
-}
+        .product-card-front {
+            display: flex;
+            flex-direction: column;
+        }
 
-.product-card-back {
-    background: var(--primary-color);
-    color: var(--white);
-    transform: rotateY(180deg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-}
+        .product-card-back {
+            background: var(--primary-color);
+            color: var(--white);
+            transform: rotateY(180deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
 
-.product-card-back p {
-    text-align: center;
-    line-height: 1.6;
-}
+        .product-card-back p {
+            text-align: center;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
 
-.product-image {
-    width: 100%;
-    height: 300px;
-    overflow: hidden;
-}
+        .product-image {
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            background: var(--white);
+        }
 
-.product-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    padding: 1rem; 
-}
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 1rem;
+        }
 
-.product-info {
-    padding: 1.5rem;
-    text-align: center;
-    background: var(--white);
-}
+        .product-info {
+            padding: 1.5rem;
+            text-align: center;
+            background: var(--white);
+        }
 
-.product-info h4 {
-    font-size: 1.3rem;
-    color: var(--primary-color);
-}
+        .product-info h4 {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin: 0;
+        }
 
-.product-note {
-    text-align: center;
-    margin-top: 3rem;
-    padding: 1.5rem;
-    background: var(--primary-color);
-    color: var(--white);
-    border-radius: 10px;
-    font-size: 1.1rem;
-}
+        .product-note {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1.5rem;
+            background: var(--primary-color);
+            color: var(--white);
+            border-radius: 10px;
+            font-size: 1.1rem;
+        }
 
         .contact-container {
             display: grid;
@@ -654,7 +655,7 @@
                 transform: scale(1.05);
             }
         }
-        /* Tablets - 768px a 1024px */
+
         @media (max-width: 1024px) {
             .values-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -671,9 +672,12 @@
             .product-card:nth-child(5) {
                 grid-column: span 1;
             }
+            
+            .product-card {
+                height: 420px;
+            }
         }
 
-        /* Tablets pequeños y móviles grandes - menos de 768px */
         @media (max-width: 768px) {
             .menu-toggle {
                 display: flex;
@@ -798,22 +802,43 @@
 
             .product-card {
                 height: auto;
-                min-height: 400px;
+                perspective: none;
             }
-
-            .product-card:hover .product-card-inner {
-                transform: none;
+            
+            .product-card-inner {
+                transform: none !important;
+                position: static;
             }
-
+            
+            .product-card-front,
             .product-card-back {
-                position: relative;
-                transform: none;
-                margin-top: 1rem;
-                border-radius: 0 0 15px 15px;
+                position: static;
+                backface-visibility: visible;
+                transform: none !important;
             }
-
+            
+            .product-card-front {
+                margin-bottom: 0;
+            }
+            
+            .product-card-back {
+                background: var(--light);
+                color: var(--dark);
+                padding: 1.5rem;
+                border-radius: 0;
+            }
+            
             .product-image {
-                height: 250px;
+                height: 220px;
+            }
+            
+            .product-info {
+                padding: 1rem;
+            }
+            
+            .product-info h4 {
+                font-size: 1.2rem;
+                margin-bottom: 0.5rem;
             }
 
             .product-note {
@@ -879,7 +904,6 @@
             }
         }
 
-        /* Móviles pequeños - menos de 480px */
         @media (max-width: 480px) {
             .hero h1 {
                 font-size: 1.6rem;
@@ -916,13 +940,13 @@
             .product-info h4 {
                 font-size: 1.1rem;
             }
-
-            .product-card {
-                min-height: 350px;
-            }
-
+            
             .product-image {
-                height: 200px;
+                height: 180px;
+            }
+            
+            .product-card-back p {
+                font-size: 0.9rem;
             }
 
             .contact-item h4 {
@@ -950,7 +974,6 @@
             }
         }
 
-        /* Landscape móviles */
         @media (max-height: 600px) and (orientation: landscape) {
             .hero {
                 min-height: 100vh;
@@ -969,64 +992,6 @@
 
             section {
                 padding: 2rem 1rem;
-            }
-        }
-        @media (max-width: 768px) {
-            .menu-toggle {
-                display: flex;
-            }
-
-            .nav-menu {
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background: var(--white);
-                flex-direction: column;
-                padding: 1rem;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-                display: none;
-            }
-
-            .nav-menu.active {
-                display: flex;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .hero p {
-                font-size: 1rem;
-            }
-
-            .about-content,
-            .mv-container,
-            .contact-container {
-                grid-template-columns: 1fr;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .whatsapp-button {
-                width: 50px;
-                height: 50px;
-                bottom: 20px;
-                right: 20px;
-            }
-
-            .whatsapp-button i {
-                font-size: 24px;
-            }
-
-            .product-card {
-                height: auto;
-            }
-
-            .product-card:hover .product-card-inner {
-                transform: none;
             }
         }
     </style>
@@ -1075,7 +1040,7 @@
                     <p>Nuestro compromiso es ofrecer productos innovadores que se adapten a las necesidades específicas de cada industria, manteniendo siempre los más altos estándares de calidad y servicio.</p>
                 </div>
                 <div class="about-image" data-aos="fade-left">
-                    <img src="images/burbupack2.png" alt="Instalaciones Indpack" loading="lazy">
+                    <img src="images/burbupack1.JPG" alt="Instalaciones Indpack" loading="lazy">
                 </div>
             </div>
         </div>
@@ -1151,7 +1116,7 @@
                     <div class="product-card-inner">
                         <div class="product-card-front">
                             <div class="product-image">
-                                <img src="images/burbupack.png"" alt="Burbupack" loading="lazy">
+                                <img src="images/burbupack.png" alt="Burbupack" loading="lazy">
                             </div>
                             <div class="product-info">
                                 <h4>Burbupack</h4>
@@ -1183,7 +1148,7 @@
                     <div class="product-card-inner">
                         <div class="product-card-front">
                             <div class="product-image">
-                                <img src="images/zunchospet.png"" alt="Zuncho PET" loading="lazy">
+                                <img src="images/zunchospet.png" alt="Zuncho PET" loading="lazy">
                             </div>
                             <div class="product-info">
                                 <h4>Zuncho PET</h4>
@@ -1305,7 +1270,7 @@
                                 required
                                 maxlength="100"
                                 autocomplete="email">
-                            <small>Ejemplo: ejemplo@gmail.com</small>
+                            <small>Ejemplo: abdcdefgh@gmail.com</small>
                             <span class="error-message" id="email-error"></span>
                         </div>
                         
