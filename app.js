@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('reCAPTCHA no verificado');
                 const formMessage = document.getElementById('formMessage');
                 formMessage.className = 'form-message error';
-                formMessage.textContent = 'Por favor, marca la casilla "No soy un robot"';
+                formMessage.textContent = 'Por favor, completa el reCAPTCHA';
                 return; 
             }
 
@@ -269,5 +269,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+
 
 }); 
