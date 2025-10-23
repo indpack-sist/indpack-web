@@ -1419,7 +1419,9 @@
                             <small id="mensaje-count">0/500 caracteres</small>
                             <span class="error-message" id="mensaje-error"></span>
                         </div>
-                        
+                        <div class="form-group">
+                            <div class="g-recaptcha" data-sitekey="6LdklPQrAAAAAMHp86PMBfOGRKQwwkzsaHLi22JO"></div>
+                        </div>
                         <button type="submit" class="btn" id="submitBtn" style="width: 100%;">
                             <i class="fas fa-paper-plane"></i> Enviar Mensaje
                         </button>
@@ -1719,6 +1721,50 @@
                 navbar.classList.remove('scrolled');
             }
         });
+    </script>
+    <script src='https://www.google.com/recaptcha/api.js' async defer>
+        document.getElementById('contactForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Evita el envío tradicional del formulario
+
+    const form = this;
+    const submitBtn = document.getElementById('submitBtn');
+    
+    // 1. Obtener la respuesta del reCAPTCHA
+    // El 'g-recaptcha-response' es el nombre del campo que genera reCAPTCHA
+    const recaptchaResponse = grecaptcha.getResponse(); 
+
+    // 2. Verificar si la respuesta está vacía
+    if (!recaptchaResponse) {
+        // Mostrar mensaje de error si la casilla no está marcada
+        document.getElementById('formMessage').innerText = 'Por favor, marque la casilla "No soy un robot".';
+        document.getElementById('formMessage').className = 'form-message error';
+        return; // Detiene el envío
+    }
+
+    // Desactivar el botón mientras se envía para evitar doble click
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
+    // 3. Proceder con EmailJS
+    emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', form)
+        .then(() => {
+            // Éxito:
+            document.getElementById('formMessage').innerText = 'Mensaje enviado con éxito.';
+            document.getElementById('formMessage').className = 'form-message success';
+            form.reset(); // Limpia el formulario
+        }, (error) => {
+            // Error:
+            document.getElementById('formMessage').innerText = 'Error al enviar el mensaje. Intente de nuevo.';
+            document.getElementById('formMessage').className = 'form-message error';
+            console.error('EmailJS ERROR:', error);
+        })
+        .finally(() => {
+            // 4. Restablecer el CAPTCHA y el botón en cualquier caso
+            grecaptcha.reset(); // Vuelve a poner el CAPTCHA listo para el próximo intento
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Mensaje';
+        });
+});   
     </script>
 </body>
 </html>
