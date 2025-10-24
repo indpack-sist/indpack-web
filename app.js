@@ -390,5 +390,18 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('• seguridadIndpack.obtenerEstadisticas() - Ver estadísticas');
     console.log('• seguridadIndpack.limpiarHistorial()    - Limpiar historial');
     console.log('═══════════════════════════════════════════════════════════');
-
+    
+import { Analytics } from '@vercel/analytics/next';
+ 
+function MyApp({ Component, pageProps }) {
+  return (
+    <>
+      <Component {...pageProps} />
+      <Analytics />
+    </>
+  );
+}
+ 
+export default MyApp;
 });
+
