@@ -16,7 +16,7 @@
 html {
     scroll-behavior: smooth;
     overflow-x: hidden;
-    scroll-padding-top: 100px;
+    scroll-padding-top: 95px;
 }
 
 body {
@@ -1204,4 +1204,5 @@ footer {
     height: 100%;
     border: 0;
 }
+
 
