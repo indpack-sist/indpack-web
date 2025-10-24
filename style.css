@@ -215,6 +215,7 @@ section {
     line-height: 1.8;
     font-size: 1.1rem;
     word-wrap: break-word;
+    text-align: justify;
 }
 
 .about-image {
@@ -253,6 +254,7 @@ section {
     box-shadow: 0 5px 20px rgba(0,0,0,0.08);
     transition: transform 0.3s;
     word-wrap: break-word;
+    text-align: justify;
 }
 
 .mv-card:hover {
@@ -1104,6 +1106,7 @@ footer {
 
     .mv-card p {
         font-size: 0.9rem;
+        text-align: justify;
     }
 
     .value-card {
@@ -1116,6 +1119,7 @@ footer {
 
     .value-card p {
         font-size: 0.85rem;
+        text-align: justify;
     }
 
     .product-info h4 {
