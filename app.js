@@ -1,3 +1,6 @@
+import { inject } from '@vercel/analytics/browser';
+inject();
+
 const sistemaDeteccion = {
     intentosBloqueados: 0,
     intentosExitosos: 0,
@@ -392,5 +395,6 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('═══════════════════════════════════════════════════════════');
     
 });
+
 
 
